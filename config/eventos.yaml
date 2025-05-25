@@ -1,0 +1,28 @@
+eventos:
+  - id: caida_suelo
+    nombre: "Caída al suelo"
+    descripcion: "Persona colapsa pasando de vertical a horizontal y permanece en el suelo"
+    criterios:
+      cambio_relacion_bbox:
+        de: 1.6
+        a: 0.6
+      duracion_suelo_s: 3
+    prioridad: alta
+
+  - id: salida_casa
+    nombre: "Salida no autorizada"
+    descripcion: "Persona cruza la zona de puerta fuera de horario permitido"
+    criterios:
+      zona: puerta_principal
+      duracion_cruce_s: 2
+      horario_permitido:
+        inicio: "08:00"
+        fin: "20:00"
+    prioridad: media
+
+  - id: inactividad_larga
+    nombre: "Inactividad prolongada"
+    descripcion: "Sin movimiento detectado > X minutos"
+    criterios:
+      duracion_inactividad_s: 300
+    prioridad: media

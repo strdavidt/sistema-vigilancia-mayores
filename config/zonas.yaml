@@ -1,0 +1,6 @@
+zonas:
+  puerta_principal:
+    tipo: linea
+    puntos:
+      - [x1, y1]
+      - [x2, y2]

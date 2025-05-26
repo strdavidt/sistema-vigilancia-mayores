@@ -17,9 +17,17 @@ class VideoAnalyzer:
                 break
 
             results = self.model(frame)
+            boxes = results[0].boxes
+
+            person_mask = boxes.cls == 0  # 0 es la clase de 'person' en COCO
+            person_boxes = boxes[person_mask]
+            # Reemplazar las detecciones originales con solo personas
+            results[0].boxes = person_boxes
+
+            # Dibujar solo las personas
             annotated_frame = results[0].plot()
 
-            events = self.event_detector.detect_events(results)
+            events = self.event_detector.detect_events([results[0]])
 
             for event in events:
                 if event["type"] == "fall":

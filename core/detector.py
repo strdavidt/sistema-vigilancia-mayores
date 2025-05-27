@@ -2,13 +2,15 @@ from ultralytics import YOLO
 import cv2
 import time
 from core.eventos import EventDetector
+from core.notificaciones import send_push_notification
 
 class VideoAnalyzer:
-    def __init__(self, source=0):
+    def __init__(self, source=0, user_token=None):
         self.model = YOLO("yolov8n.pt")
         self.source = source
         self.event_detector = EventDetector()
         self.active_events = []  # Lista de eventos visibles
+        self.user_token = user_token
 
     def start_detection(self):
         cap = cv2.VideoCapture(self.source)
@@ -37,6 +39,23 @@ class VideoAnalyzer:
                         "type": event["type"],
                         "timestamp": current_time
                     })
+
+                    # Enviar notificación push solo si hay token
+                    if self.user_token:
+                        if event["type"] == "fall":
+                            send_push_notification(
+                                token=self.user_token,
+                                title="Alerta de Caída",
+                                body="Se ha detectado una posible caída."
+                            )
+                            print("Notificación de caída enviada.")
+                        elif event["type"] == "exit":
+                            send_push_notification(
+                                token=self.user_token,
+                                title="Persona ausente",
+                                body="La persona ha salido del área de monitoreo."
+                            )
+                            print("Notificación de salida enviada.")
 
             # Limpiar eventos viejos
             self.active_events = [

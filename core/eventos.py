@@ -1,4 +1,5 @@
 import time
+from datetime import datetime
 
 class EventDetector:
     def __init__(self):
@@ -41,22 +42,29 @@ class EventDetector:
 
             # Guardar posición (aunque por ahora no lo uses)
             self.last_positions[person_id] = (x1, y1, x2, y2)
+        #obtener la hora actual
+        now = datetime.now()
+        hour = now.hour
 
         # Detectar personas que ya no están
         for person_id in list(self.last_positions.keys()):
             if person_id not in current_ids:
-                if person_id not in self.disappear_timers:
-                    self.disappear_timers[person_id] = time.time()
-                else:
-                    elapsed = time.time() - self.disappear_timers[person_id]
-                    if elapsed > 600:  # 10 minutos fuera de vista
-                        events.append({
-                            "type": "exit",
-                            "id": person_id
-                        })
-                        # Limpiar memoria
-                        self.last_positions.pop(person_id, None)
-                        self.disappear_timers.pop(person_id, None)
-                        self.fall_timers.pop(person_id, None)
-
+                if 7 <= hour < 21:  # Horario de día
+                    if person_id not in self.disappear_timers:
+                        self.disappear_timers[person_id] = time.time()
+                    else:
+                        elapsed = time.time() - self.disappear_timers[person_id]
+                        if elapsed > 1200:  # 20 minutos fuera de vista
+                            events.append({
+                                "type": "exit",
+                                "id": person_id
+                            })
+                            # Limpiar memoria
+                            self.last_positions.pop(person_id, None)
+                            self.disappear_timers.pop(person_id, None)
+                            self.fall_timers.pop(person_id, None)
+                else:  # Horario nocturno
+                    self.disappear_timers.pop(person_id, None)
+            else:
+                self.disappear_timers.pop(person_id, None)
         return events

@@ -1,6 +1,6 @@
 # sistema-vigilancia-mayores
 sistema de vigilancia para adultos mayores y personas con alzheimer
-#autores: Kevin, Daniel y David
+#autores: Kevin, Daniel, David y Manael
 #tabla de eventos
 | ID                  | Nombre                 | Criterios principales                         | Prioridad |
 | ------------------- | ---------------------- | --------------------------------------------- | --------- |
